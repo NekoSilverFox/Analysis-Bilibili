@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]
+then
+    echo "No Args Input..."
+    exit ;
+fi
+
+case $1 in
+"start")
+        echo " =================== 启动 hadoop集群 ==================="
+
+        echo " --------------- 启动 hdfs ---------------"
+        ssh hadoop102 "/opt/module/hadoop-3.1.3/sbin/start-dfs.sh"
+        echo " --------------- 启动 yarn ---------------"
+        ssh hadoop103 "/opt/module/hadoop-3.1.3/sbin/start-yarn.sh"
+        echo " --------------- 启动 historyserver ---------------"
+        ssh hadoop102 "/opt/module/hadoop-3.1.3/bin/mapred --daemon start historyserver"
+        echo " --------------- 启动 hive metastore ---------------"
+	ssh hadoop102 "nohup /opt/module/hive/bin/hive --service metastore >> /opt/module/hive/logs/metastore.log 2>&1 &"
+        echo " --------------- 启动 hive server2 ---------------"
+        ssh hadoop102 "nohup /opt/module/hive/bin/hive --service hiveserver2 >> /opt/module/hive/logs/hiveserver2.log 2>&1 &"
+;;
+"stop")
+        echo " =================== 关闭 hadoop集群 ==================="
+        echo " --------------- 关闭 hive matastore & server2 ---------------"
+        ssh hadoop102 "kill -2 $(ps -ef|grep RunJar|gawk '$0 !~/grep/ {print $2}' |tr -s '\n' ' ')"
+        echo " --------------- 关闭 historyserver ---------------"
+        ssh hadoop102 "/opt/module/hadoop-3.1.3/bin/mapred --daemon stop historyserver"
+        echo " --------------- 关闭 yarn ---------------"
+        ssh hadoop103 "/opt/module/hadoop-3.1.3/sbin/stop-yarn.sh"
+        echo " --------------- 关闭 hdfs ---------------"
+        ssh hadoop102 "/opt/module/hadoop-3.1.3/sbin/stop-dfs.sh"
+;;
+*)
+    echo "Input Args Error..."
+;;
+esac
+

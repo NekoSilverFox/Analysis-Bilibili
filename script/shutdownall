@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo " >>>>> Shutdown Hadoop104"
+ssh hadoop104 "init 0"
+
+echo " >>>>> Shutdown Hadoop103"
+ssh hadoop103 "init 0"
+
+echo " >>>>> Shutdown Hadoop102"
+ssh hadoop102 "init 0"
