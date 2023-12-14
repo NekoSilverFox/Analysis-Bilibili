@@ -36,9 +36,15 @@ All required environments and scripts are included in the OVA file. The version 
 
 
 
+## Architecture diagram
+
+![architecture](doc/pic/architecture.png)
+
 ###  Description of the document
 
 The required software installation directory is in `/opt/module`, which includes Hadoop, Hive, Superset, etc.
+
+
 
 ###  Configuring Hadoop
 
@@ -168,8 +174,3 @@ superset run -h YOUR_IP -p 8099 --with-threads --reload
 ###  Direct import of data
 
 You can import the Dashboard's analysis results directly into Superset, the file provided is the folder `res_superset`.
-
-
-
-
-
